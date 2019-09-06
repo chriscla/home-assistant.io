@@ -1,16 +1,11 @@
 ---
-layout: page
 title: "Harmony Hub Remote"
 description: "Instructions on how to integrate Harmony Hub remotes into Home Assistant."
-date: 2016-11-05 17:00
-sidebar: true
-comments: false
-sharing: true
-footer: true
 logo: logitech.png
-ha_category: Remote
-ha_iot_class: "Local Push"
-ha_release: "0.34"
+ha_category:
+  - Remote
+ha_iot_class: Local Push
+ha_release: 0.34
 redirect_from:
   - /components/remote.harmony/
 ---
@@ -41,7 +36,7 @@ You can override some default configuration values on a discovered hub (e.g., th
 ```yaml
 # Example configuration.yaml entry with discovery
   - platform: harmony
-    name: Living Room 
+    name: Living Room
     activity: Watch TV
 ```
 
@@ -67,9 +62,15 @@ delay_secs:
   description: Default duration in seconds between sending commands to a device.
   required: false
   type: float
+  default: 0.4
+hold_secs:
+  description: Default duration in seconds between sending the "press" command and sending the "release" command.
+  required: false
+  type: integer
+  default: 0
 {% endconfiguration %}
 
-### {% linkable_title Configuration file %}
+### Configuration file
 
 Upon startup one file will be written to your Home Assistant configuration directory per device in the following format: `harmony_REMOTENAME.conf`. The file will contain:
 
@@ -77,26 +78,26 @@ Upon startup one file will be written to your Home Assistant configuration direc
 - List of all programmed device names and ID numbers
 - List of all available commands per programmed device
 
-This file will be overwritten whenever the Harmony HUB has a new configuration, there is no need to restart HASS.
+This file will be overwritten whenever the Harmony HUB has a new configuration, there is no need to restart Home Assistant.
 
-### {% linkable_title Service `remote.turn_off` %}
+### Service `remote.turn_off`
 
 Turn off all devices that were switched on from the start of the current activity.
 
 | Service data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
-| `entity_id`            |      yes | Only act on a specific remote, else target all.
+| `entity_id`            |       no | Entity ID to target.
 
-### {% linkable_title Service `remote.turn_on` %}
+### Service `remote.turn_on`
 
 Start an activity. Will start the default `activity` from configuration.yaml if no activity is specified.  The specified activity can either be the activity name or the activity ID from the configuration file written to your [Home Assistant configuration directory](/docs/configuration/).
 
 | Service data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
-| `entity_id`            |      yes | Only act on a specific remote, else target all.
+| `entity_id`            |       no | Entity ID to target.
 | `activity`             |      yes | Activity ID or Activity Name to start.
 
-##### {% linkable_title Example %}
+##### Example
 
 In the file 'harmony_REMOTENAME.conf' you can find the available activities, for example:
 
@@ -121,13 +122,13 @@ action:
        activity: "Watch TV"
 ```
 
-### {% linkable_title Service `remote.send_command` %}
+### Service `remote.send_command`
 
 Send a single command or a set of commands to one device, device ID and available commands are written to the configuration file at startup. You can optionally specify the number of times you wish to repeat the command(s) and delay you want between repeated command(s).
 
 | Service data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
-| `entity_id`            |      yes | Only act on a specific remote, else target all.
+| `entity_id`            |       no | Entity ID to target.
 | `device`               |       no | Device ID or Device Name to send the command to.
 | `command`              |       no | A single command or a list of commands to send.
 | `num_repeats`          |      yes | The number of times to repeat the command(s).
@@ -154,11 +155,10 @@ In the file 'harmony_REMOTENAME.conf' you can find the available devices and com
                 "Mute"
             ],
             "id": "428297615"
-        }        
+        }
     }
 }
 ```
-
 
 A typical service call for sending several button presses looks like this:
 
@@ -184,13 +184,13 @@ data:
   delay_secs: 0.6
 ```
 
-### {% linkable_title Service `remote.harmony_change_channel` %}
+### Service `remote.harmony_change_channel`
 
-Sends the change channel command to the Harmony HUB 
+Sends the change channel command to the Harmony HUB
 
 | Service data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
-| `entity_id`            |       no | Only act on a specific remote, else target all.
+| `entity_id`            |       no | Entity ID to target.
 | `channel`              |       no | Channel number to change to
 
 A typical service call for changing the channel would be::
@@ -202,15 +202,15 @@ data:
   channel: 200
 ```
 
-### {% linkable_title Service `remote.harmony_sync` %}
+### Service `remote.harmony_sync`
 
 Force synchronization between the Harmony device and the Harmony cloud.
 
 | Service data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
-| `entity_id`            |      yes | Only act on a specific remote, else target all.
+| `entity_id`            |       no | Entity ID to target.
 
-### {% linkable_title Examples %}
+### Examples
 
 Template sensors can be utilized to display current activity in the frontend.
 
@@ -220,10 +220,10 @@ sensor:
   - platform: template
     sensors:
       family_room:
-        value_template: '{{ states.remote.family_room.attributes.current_activity }}'
+        value_template: '{{ state_attr('remote.family_room', 'current_activity') }}'
         friendly_name: 'Family Room'
       bedroom:
-        value_template: '{{ states.remote.bedroom.attributes.current_activity }}'
+        value_template: '{{ state_attr('remote.bedroom', 'current_activity') }}'
         friendly_name: 'bedroom'
 ```
 {% endraw %}

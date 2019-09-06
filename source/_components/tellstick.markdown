@@ -1,21 +1,15 @@
 ---
-layout: page
 title: "TellStick"
 description: "Instructions on how to integrate your TellStick into Home Assistant."
-date: 2015-03-28 13:06
-sidebar: true
-comments: false
-sharing: true
-footer: true
 logo: telldus_tellstick.png
-ha_release: "pre 0.7"
+ha_release: pre 0.7
 ha_category:
   - Hub
   - Cover
   - Light
   - Sensor
   - Switch
-ha_iot_class: "Assumed State"
+ha_iot_class: Assumed State
 redirect_from:
   - /components/cover.tellstick/
   - /components/light.tellstick/
@@ -23,16 +17,19 @@ redirect_from:
   - /components/switch.tellstick/
 ---
 
-The `tellstick` component integrates [TellStick](https://telldus.com/produkt/z-wave-gateway-tellstick-znet-lite-ver-2/) devices into Home Assistant. This integration allows users to add switches, lights, and sensors which are communicating with 433 MHz. There are a number of vendors (Capidi Elro, Intertechno, Nexa, Proove, Sartano, and Viking) who are selling products that work with TellStick. For more details, please check the TellStick [protocol list](http://developer.telldus.com/wiki/TellStick_conf).
+The `tellstick` integration integrates [TellStick][tellstick-gateway] devices into Home Assistant. This integration allows users to add switches, lights, and sensors which are communicating with 433 MHz. There are a number of vendors (Capidi Elro, Intertechno, Nexa, Proove, Sartano, and Viking) who are selling products that work with TellStick. For more details, please check the TellStick [protocol list](http://developer.telldus.com/wiki/TellStick_conf).
 
 There is currently support for the following device types within Home Assistant:
 
+- [Configuration](#configuration)
 - [Cover](#cover)
 - [Light](#light)
 - [Sensor](#sensor)
+- [Examples](#examples)
+  - [Full configuration](#full-configuration)
 - [Switch](#switch)
 
-## {% linkable_title Configuration %}
+## Configuration
 
 To get started, add the devices to your `configuration.yaml` file.
 
@@ -66,9 +63,9 @@ port:
   type: list
 {% endconfiguration %}
 
-## {% linkable_title Cover %}
+## Cover
 
-This `tellstick` cover platform allows you to control your [TellStick](http://www.telldus.se/products/tellstick) covers.
+This `tellstick` cover platform allows you to control your [TellStick][tellstick-gateway] covers.
 
 To use your TellStick device, you first have to set up your [Tellstick hub](#configuration) and then add the following to your `configuration.yaml` file:
 
@@ -78,9 +75,9 @@ cover:
   - platform: tellstick
 ```
 
-## {% linkable_title Light %}
+## Light
 
-This `tellstick` light platform allows you to control your [TellStick](http://www.telldus.se/products/tellstick) dimmers.
+This `tellstick` light platform allows you to control your [TellStick][tellstick-gateway] dimmers.
 
 To use your TellStick device, you first have to set up your [Tellstick hub](#configuration) and then add the following to your `configuration.yaml` file:
 
@@ -90,9 +87,9 @@ light:
   platform: tellstick
 ```
 
-## {% linkable_title Sensor %}
+## Sensor
 
-The `tellstick` sensor platform allows you to get current meteorological data from a [TellStick](http://www.telldus.se/products/tellstick) device.
+The `tellstick` sensor platform allows you to get current meteorological data from a [TellStick][tellstick-gateway] device.
 
 To use your TellStick device, you first have to set up your [Tellstick hub](#configuration) and then add the following to your `configuration.yaml` file:
 
@@ -108,10 +105,19 @@ sensor:
   required: false
   type: string
 only_named:
-  description: Only show the named sensors. Set to `true` to hide sensors.
+  description: Only add and include specified sensors. If this is not specified all sensors will be imported and the names will be based on each sensor's ID number.
   required: false
   default: false
-  type: boolean
+  type: list
+  keys:
+    id:
+      description: The ID-number of the sensor to include.
+      required: true
+      type: integer
+    name:
+      description: Specify the name of the selected sensor.
+      required: true
+      type: string
 temperature_scale:
   description: The scale of the temperature value.
   required: false
@@ -124,26 +130,28 @@ datatype_mask:
   type: integer
 {% endconfiguration %}
 
-## {% linkable_title Examples %}
+## Examples
 
 In this section you find some real-life examples of how to use this sensor.
 
-### {% linkable_title Full configuration %}
+### Full configuration
 
 ```yaml
 # Example configuration.yaml entry
 sensor:
   - platform: tellstick
-    135: Outside
-    21: Inside
-    only_named: true
     temperature_scale: "°C"
     datatype_mask: 1
+    only_named:
+      - id: 135
+        name: Outside
+      - id: 21
+        name: Inside
 ```
 
-## {% linkable_title Switch %}
+## Switch
 
-This `tellstick` switch platform allows you to control [TellStick](http://www.telldus.se/products/tellstick) devices.
+This `tellstick` switch platform allows you to control [TellStick][tellstick-gateway] devices.
 
 To use your TellStick device, you first have to set up your [Tellstick hub](#configuration) and then add the following to your `configuration.yaml` file:
 
@@ -152,3 +160,5 @@ To use your TellStick device, you first have to set up your [Tellstick hub](#con
 switch:
   - platform: tellstick
 ```
+
+[tellstick-gateway]: https://telldus.com/produkt/z-wave-gateway-tellstick-znet-lite-ver-2/
