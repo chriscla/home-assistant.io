@@ -56,15 +56,15 @@ password:
 
 This component will create these sensors:
 
-- `article_cache`: Number of cached articles.
-- `average_download_rate`: Average download rate
-- `download_paused`: Paused downloads
-- `download_rate`: Current download rate
-- `download_size`: The size to download
-- `free_disk_space`: Free disk space at the storage location of NZBGet
-- `post_paused`: Paused posts
-- `remaining_size`: Remaining size to download
-- `uptime`: Uptime of NZBGet
+- `nzbget_article_cache`: Article cache sizes in MB
+- `nzbget_average_speed`: Average download rate since server start in MB/s
+- `nzbget_download_paused`: Whether downloading is paused
+- `nzbget_speed`: Current download rate in MB/s
+- `nzbget_queue_size`: The size to download
+- `nzbget_disk_free`: Free disk space at the storage location of NZBGet
+- `nzbget_post_processing_paused`: Whether post processing is paused
+- `nzbget_uptime`: Uptime of NZBGet
+- `nzbget_size`: Amount of data downloaded since server start in MB
 
 ## Services
 
